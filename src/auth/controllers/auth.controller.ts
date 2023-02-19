@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 
 @Controller('api/v1/auth/login')
@@ -19,5 +19,10 @@ export class AuthController {
   @Post('/token')
   async token(@Body() data: { email: string; refreshToken: string }) {
     return await this.authService.getTokenWithRefresh(data);
+  }
+
+  @Get('time')
+  time() {
+    return this.authService.time();
   }
 }

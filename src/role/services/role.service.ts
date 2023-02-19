@@ -66,16 +66,16 @@ export class RoleService {
     }
 
     //Si no hay modulos ingresados
-    if (!module || module.length === 0) {
-      throw new HttpException(
-        {
-          status: HttpStatus.BAD_REQUEST,
-          type: 'BAD_REQUEST',
-          message: 'El rol debe tener al menos un modulo.',
-        },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+    // if (!module || module.length === 0) {
+    //   throw new HttpException(
+    //     {
+    //       status: HttpStatus.BAD_REQUEST,
+    //       type: 'BAD_REQUEST',
+    //       message: 'El rol debe tener al menos un modulo.',
+    //     },
+    //     HttpStatus.BAD_REQUEST,
+    //   );
+    // }
 
     //Validamos si los modulos entrantes existen o estan inactivos
     const arrayToString: string[] = Object.keys(module).map(
@@ -368,6 +368,14 @@ export class RoleService {
         creator: rol.creator
           ? rol.creator.name + ' ' + rol.creator.lastname
           : 'NINGUNO',
+        createdAt: rol.createdAt,
+        updatedAt: rol.updatedAt,
+        module: rol.module.map((mod) => {
+          return {
+            label: mod.name,
+            value: mod._id,
+          };
+        }),
       };
     });
 

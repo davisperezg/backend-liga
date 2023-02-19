@@ -61,11 +61,11 @@ export class UserService implements OnApplicationBootstrap {
 
         await this.userModel.insertMany([
           {
-            name: 'El',
-            lastname: 'Duenio',
+            name: 'DAVIS KEINER',
+            lastname: 'PEREZ GUZMAN',
             tipDocument: 'DNI',
             nroDocument: '99999999',
-            email: 'admin@admin.com',
+            email: 'davisperezg@gmail.com',
             password: passwordHashed,
             status: true,
             role: getRole._id,
@@ -116,6 +116,8 @@ export class UserService implements OnApplicationBootstrap {
           ? user.creator.name + ' ' + user.creator.lastname
           : 'Ninguno',
         role: user.role.name,
+        liga: user.liga,
+        roleId: user.role._id,
       };
     });
 

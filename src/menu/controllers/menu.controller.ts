@@ -23,7 +23,7 @@ export class MenuController {
 
   // Get Menus: http://localhost:3000/api/v1/menus
   @Get()
-  @UseGuards(PermissionGuard(Permission.ReadMenu))
+  @UseGuards(PermissionGuard(Permission.CreateModule || Permission.EditModule))
   async getMenus(@Res() res): Promise<Menu[]> {
     const menus = await this.menuService.findAll();
     return res.status(HttpStatus.OK).json(menus);

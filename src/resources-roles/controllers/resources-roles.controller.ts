@@ -28,8 +28,9 @@ export class ResourcesRolesController {
   // }
 
   // Get Menus
+  //Este metodo se usa para obtener los recursos al editar rol
   @Get('/role/:id')
-  @UseGuards(PermissionGuard(Permission.ReadResourcesByRol))
+  @UseGuards(PermissionGuard(Permission.EditRole))
   async getResourcesByRol(
     @Res() res,
     @Param('id') id: string,
@@ -39,8 +40,9 @@ export class ResourcesRolesController {
   }
 
   // Add Resource
+  //Este metodo se usa para crear los recursos nuevos seleccionados al editar rol
   @Post()
-  @UseGuards(PermissionGuard(Permission.CreateResourceR))
+  @UseGuards(PermissionGuard(Permission.EditRole))
   async createRR(
     @Res() res,
     @Body() createBody: Resource_Role,

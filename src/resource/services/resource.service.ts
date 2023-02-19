@@ -42,7 +42,7 @@ export class ResourceService implements OnModuleInit {
   //   return await this.resourceModel.findByIdAndDelete(id);
   // }
 
-  async findAll(user: any): Promise<Resource[] | any[]> {
+  async findAll(user: any, id: string): Promise<Resource[] | any[]> {
     const { findUserBack, findUser } = user;
     const resources = await this.resourceModel
       .find({ status: true })
@@ -68,10 +68,28 @@ export class ResourceService implements OnModuleInit {
         };
       });
     } else {
+      //obtener solo keys de los recursos por defectos
+      const justKeys = resourcesByDefault.map((a) => a.key);
+
+      //se obtiene los datos del rol
+      const searchRolToedit = await this.roleModel.findById(id);
+
+      //si se consulta el rol owner no podra manipular sus recursos
+      if (searchRolToedit.name === 'OWNER') {
+        return (formatResourcesToFront = resources.map((res) => {
+          return {
+            label: res.name,
+            value: res.key,
+            disabled: justKeys.some((j) => (j === res.key ? true : false)),
+          };
+        }));
+      }
+
       formatResourcesToFront = resources.map((res) => {
         return {
           label: res.name,
           value: res.key,
+          // disabled: justKeys.some((j) => (j === res.key ? true : false)),
         };
       });
     }
@@ -123,7 +141,7 @@ export class ResourceService implements OnModuleInit {
     }
 
     //Solo se permite letras
-    const patt = new RegExp(/^[A-Za-z]+$/g);
+    const patt = new RegExp(/^[A-Za-z_]+$/g);
     if (!patt.test(key)) {
       throw new HttpException(
         {

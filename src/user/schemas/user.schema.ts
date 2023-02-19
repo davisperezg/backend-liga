@@ -23,6 +23,9 @@ export class User {
   @Prop({ trim: true, requerid: true })
   password: string;
 
+  @Prop({ trim: true, uppercase: true })
+  liga: string;
+
   @Prop({ trim: true, requerid: true })
   status: boolean;
 

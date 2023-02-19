@@ -22,8 +22,9 @@ export class ModuleController {
   constructor(private readonly moduleService: ModuleService) {}
 
   // Get Modules: http://localhost:3000/api/v1/modules
+  // Este metodo se usara para listar los modulos al crear rol o editar
   @Get()
-  @UseGuards(PermissionGuard(Permission.ReadModuleItem))
+  @UseGuards(PermissionGuard(Permission.CreateRole || Permission.EditRole))
   getModules(@CtxUser() user: any) {
     return this.moduleService.findAll(user);
   }

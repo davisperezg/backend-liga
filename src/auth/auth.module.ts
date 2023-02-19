@@ -8,7 +8,6 @@ import { AuthService } from './services/auth.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserService } from 'src/user/services/user.service';
 import { UserSchema } from 'src/user/schemas/user.schema';
-import { jwtConstants } from 'src/lib/const/consts';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtStrategy } from 'src/lib/strategies/jwt.strategies';
 import { RoleSchema } from 'src/role/schemas/role.schema';
@@ -38,12 +37,20 @@ import {
   CopyServices_User,
 } from 'src/services-users/schemas/cp-services-user';
 import { ServicesUsersService } from 'src/services-users/services/services-users.service';
+import { ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '24h' },
+    JwtModule.registerAsync({
+      useFactory: (config: ConfigService) => {
+        return {
+          secret: config.get<string>('JWT_SECRET_KEY'),
+          signOptions: {
+            expiresIn: config.get<string | number>('JWT_EXPIRE'),
+          },
+        };
+      },
+      inject: [ConfigService],
     }),
     MongooseModule.forFeature([
       { name: 'User', schema: UserSchema },

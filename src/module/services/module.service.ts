@@ -37,6 +37,21 @@ export class ModuleService implements OnApplicationBootstrap {
         'Permisos',
       ]);
 
+      const getMenusTickets = await this.menuService.findbyName([
+        'Generar ticket',
+        'Generar cortesia',
+        'Listado de tickets',
+      ]);
+
+      const getMenusJugadores = await this.menuService.findbyName([
+        'Generar pases',
+      ]);
+
+      const getMenusConfig = await this.menuService.findbyName([
+        'Secuencias',
+        'Precios',
+      ]);
+
       const findMenus = getMenus.map((men) => men._id);
 
       await Promise.all([
@@ -47,12 +62,20 @@ export class ModuleService implements OnApplicationBootstrap {
           creator: null,
         }).save(),
         new this.moduleModel({
-          name: 'Perfiles',
+          name: 'Configuracion',
+          menu: getMenusConfig,
           status: true,
           creator: null,
         }).save(),
         new this.moduleModel({
           name: 'Tickets',
+          status: true,
+          menu: getMenusTickets,
+          creator: null,
+        }).save(),
+        new this.moduleModel({
+          name: 'Jugadores',
+          menu: getMenusJugadores,
           status: true,
           creator: null,
         }).save(),
@@ -61,8 +84,9 @@ export class ModuleService implements OnApplicationBootstrap {
       //ADD ROL
       const getModules = await this.findbyNames([
         'Administración de sistema - PRINCIPAL',
-        'Perfiles',
+        'Jugadores',
         'Tickets',
+        'Configuracion',
       ]);
 
       await Promise.all([
@@ -102,7 +126,6 @@ export class ModuleService implements OnApplicationBootstrap {
         .populate({
           path: 'menu',
         });
-
       formated = modules
         .map((mod) => {
           if (mod.name === 'Administración de sistema - PRINCIPAL') {
@@ -110,12 +133,14 @@ export class ModuleService implements OnApplicationBootstrap {
               label: mod.name,
               value: mod._id,
               disabled: true,
+              forbidden: true,
             };
           } else {
             return {
               label: mod.name,
               value: mod._id,
               disabled: mod.status ? false : true,
+              forbidden: mod.status ? null : false,
             };
           }
         })
@@ -149,6 +174,7 @@ export class ModuleService implements OnApplicationBootstrap {
           label: mod.name,
           value: mod._id,
           disabled: mod.status ? false : true,
+          forbidden: mod.status ? null : false,
         }))
         .sort((a, b) => {
           if (a > b) {
@@ -334,11 +360,11 @@ export class ModuleService implements OnApplicationBootstrap {
     if (findModuleForbidden.name === 'Administración de sistema - PRINCIPAL') {
       throw new HttpException(
         {
-          status: HttpStatus.UNAUTHORIZED,
-          type: 'UNAUTHORIZED',
-          message: 'Unauthorized Exception',
+          status: HttpStatus.FORBIDDEN,
+          type: 'FORBIDDEN',
+          message: 'FORBIDDEN Exception',
         },
-        HttpStatus.UNAUTHORIZED,
+        HttpStatus.FORBIDDEN,
       );
     }
 

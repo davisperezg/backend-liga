@@ -11,10 +11,20 @@ import { AuthModule } from './auth/auth.module';
 import { ResourcesRolesModule } from './resources-roles/resources-roles.module';
 import { ResourcesUsersModule } from './resources-users/resources-users.module';
 import { ServicesUsersModule } from './services-users/services-users.module';
+import { SecuenciasModule } from './secuencias/secuencias.module';
+import { ClubModule } from './club/club.module';
+import { PreciosModule } from './precios/precios.module';
+import { TicketModule } from './ticket/ticket.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost/adm-rpum', {
+    ConfigModule.forRoot({
+      envFilePath: `.${process.env.NODE_ENV}.env`,
+      isGlobal: true,
+      cache: true,
+    }),
+    MongooseModule.forRoot(process.env.URL_DATABASE, {
       useFindAndModify: false,
       useCreateIndex: true,
     }),
@@ -27,6 +37,10 @@ import { ServicesUsersModule } from './services-users/services-users.module';
     ResourcesRolesModule,
     ResourcesUsersModule,
     ServicesUsersModule,
+    SecuenciasModule,
+    ClubModule,
+    PreciosModule,
+    TicketModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -20,10 +20,15 @@ export class ResourceController {
   constructor(private readonly resourceService: ResourceService) {}
 
   // Get Resources
-  @Get()
-  @UseGuards(PermissionGuard(Permission.ReadResourcesItem))
-  async getResources(@Res() res, @CtxUser() user): Promise<Resource[]> {
-    const menus = await this.resourceService.findAll(user);
+  //Este metodo se usara para listar los permisos al editar un rol
+  @Get('/role/:id')
+  @UseGuards(PermissionGuard(Permission.EditRole))
+  async getResources(
+    @Res() res,
+    @CtxUser() user,
+    @Param('id') id: string,
+  ): Promise<Resource[]> {
+    const menus = await this.resourceService.findAll(user, id);
     return res.status(HttpStatus.OK).json(menus);
   }
 

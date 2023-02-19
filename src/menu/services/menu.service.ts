@@ -40,6 +40,38 @@ export class MenuService implements OnModuleInit {
           status: true,
           link: 'permisos',
         }).save(),
+        new this.menuModel({
+          name: 'Generar pases',
+          status: true,
+          link: 'jugadores/pases',
+        }).save(),
+        new this.menuModel({
+          name: 'Generar ticket',
+          status: true,
+          link: 'tickets/nuevo',
+        }).save(),
+        new this.menuModel({
+          name: 'Generar cortesia',
+          status: true,
+          link: 'tickets/nuevo/cortesia',
+        }).save(),
+        new this.menuModel({
+          name: 'Listado de tickets',
+          status: true,
+          link: 'tickets/lista',
+        }).save(),
+
+        //CONFIGURACION
+        new this.menuModel({
+          name: 'Secuencias',
+          status: true,
+          link: 'secuencias',
+        }).save(),
+        new this.menuModel({
+          name: 'Precios',
+          status: true,
+          link: 'precios',
+        }).save(),
       ]);
     } catch (e) {
       throw new Error(`Error en MenuService.onModuleInit ${e}`);

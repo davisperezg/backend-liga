@@ -100,4 +100,27 @@ export class AuthService {
     //find user by Id
     return await this.userService.findUserById(id);
   }
+
+  //hora servidor
+  time() {
+    const date = new Date();
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    const second = date.getSeconds();
+
+    //GMT
+    const offset = date.getTimezoneOffset();
+    const offsetHours = Math.floor(offset / 60);
+    //const offsetMinutes = offset % 60;
+    const offsetSign = offset < 0 ? '+' : '-';
+
+    //console.log(`GMT ${offsetSign}${offsetHours < 10 ? '0' + offsetHours : offsetHours}:${offsetMinutes < 10 ? '0' + offsetMinutes : offsetMinutes}`);
+    const GMT = `(${offsetSign}${
+      offsetHours < 10 ? '0' + offsetHours : offsetHours
+    })`;
+
+    const time = `${hour}:${minute}:${second}`;
+
+    return time + ' ' + GMT;
+  }
 }
