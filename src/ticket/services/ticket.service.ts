@@ -1,6 +1,6 @@
 import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { isValidObjectId, Model } from 'mongoose';
 import { SecuenciasService } from 'src/secuencias/services/secuencias.service';
 import { Ticket, TicketDocument } from '../schemas/ticket.scchema';
 
@@ -115,6 +115,7 @@ export class TicketService {
     return result;
   }
 
+  //PARA CREAR Y OBTENER PDF
   async findById(id: string) {
     const getTicket: any = await this.ticketModel
       .findOne({
@@ -143,6 +144,49 @@ export class TicketService {
     };
 
     return result;
+  }
+
+  //PARA CHECKING
+  async findByIdChecking(id: string) {
+    try {
+      const getTicket = await this.ticketModel.findById(id);
+      console.log(getTicket);
+      if (getTicket) {
+        if (getTicket.checking === 1) {
+          await this.ticketModel.findByIdAndUpdate(
+            id,
+            { checking: 2 },
+            { new: true },
+          );
+
+          return {
+            encontrado: true,
+            checking: '✅✅ INGRESA ✅✅',
+          };
+        }
+
+        if (getTicket.checking === 2) {
+          return {
+            encontrado: true,
+            checking: 'ESTE TICKET YA HA SIDO UTILIZADO 😥',
+          };
+        }
+      } else {
+        return {
+          encontrado: false,
+          message: 'EL TICKET NO EXISTE 😡',
+        };
+      }
+    } catch (e) {
+      throw new HttpException(
+        {
+          status: HttpStatus.BAD_REQUEST,
+          type: 'BAD_REQUEST',
+          message: 'Error al consultar checking',
+        },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 
   async findAllTickets(userToken: any) {

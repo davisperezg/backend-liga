@@ -13,6 +13,7 @@ import { Ticket } from '../schemas/ticket.scchema';
 import { TicketService } from '../services/ticket.service';
 import PermissionGuard from 'src/lib/guards/resources.guard';
 import Permission from 'src/lib/type/permission.type';
+import { isValidObjectId } from 'mongoose';
 
 @Controller('api/v1/tickets')
 export class TicketController {
@@ -55,5 +56,12 @@ export class TicketController {
       success: true,
       response,
     });
+  }
+
+  // Get All: http://localhost:3000/api/v1/tickets/checking/asdasdasdmasd
+  @Get('/checking/:id')
+  async getChecking(@Res() res, @Param('id') id: string) {
+    const response = await this.ticketService.findByIdChecking(id);
+    return res.status(HttpStatus.OK).json(response);
   }
 }
